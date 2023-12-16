@@ -5,6 +5,7 @@ const authRoute = require('./auth.route');
 const gameRoute = require('./game.route');
 const contactUsRoute = require('./contactUs.route');
 const aboutUsRoute = require('./aboutUs.route');
+const teacherRoute = require('./teacher.route');
 
 const router = express.Router();
 

@@ -39,7 +39,14 @@ const adminSchema = mongoose.Schema({
         },
         private: true,
     },
-
+    role: {
+        type: String,
+        enum: ["Teacher",'User','Admin'],
+        default: 'User',
+    },
+    gender: {
+        type: String
+    },
 },
     {
         timestamps: true,
