@@ -12,10 +12,11 @@ const router = express.Router();
 // router.delete('/delete/:id', catchAsync(userController.deleteUser));
 
 router.post('/teacher/create',validate(userController.createTeacher.validation), catchAsync(userController.createTeacher.handler));
-router.put('/teacher/update/:id', validate(userController.updateTeacher.validation), catchAsync(userController.updateTeacher.handler));
+router.put('/teacher/update/:id', catchAsync(userController.updateTeacher));
+// router.put('/teacher/update/:id', catchAsync(userController.updateTeacher.handler));
 router.get('/teacher/get',catchAsync(userController.getAllTeacher.handler));
 router.delete('/teacher/delete/:id', catchAsync(userController.deleteTeacher.handler));
-
+// router.put('/teacher/me',userController.updateMe);
 
 // router.handler.handler.handler.handler
 //   .route('/:userId')

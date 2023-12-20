@@ -45,13 +45,13 @@ const deleteTeacher = {
     const user = await Admin.findById(req.params.id);
     if (!user) {
       return res.status(httpStatus.NOT_FOUND).send({
-        message: 'ContactUs not found',
+        message: 'Teacher not found',
       });
     }
-    console.log("hhjj",req.params.id);
+    console.log("hhjj", req.params.id);
     await Admin.findByIdAndDelete(req.params.id);
     return res.status(httpStatus.OK).send({
-      message: 'ContactUs deleted successfully',
+      message: 'Teacher deleted successfully',
     });
   }
 };
@@ -59,6 +59,11 @@ const deleteTeacher = {
 // const getMe = catchAsync(async (req, res) => {
 //   const user = await userService.getUserById(req.user._id);
 //   res.send(user);
+// });
+// const updateMe = catchAsync(async (req, res) => {
+//   // const user = await userService.getUserById(req.user.id);
+//   const user = await Admin.findOneAndUpdate({ _id }, req.body, { new: true });
+//   return res.send(user)
 // });
 
 const createTeacher = {
@@ -74,15 +79,15 @@ const createTeacher = {
   },
   handler: async (req, res) => {
     // console.log("hello", req.body)
-    const userData = await Admin.findOne({email:req.body.email})
-    if(userData){
+    const userData = await Admin.findOne({ email: req.body.email })
+    if (userData) {
       return res.status(httpStatus.BAD_REQUEST).send({
         message: 'email already exists',
       });
     }
-    const body={
+    const body = {
       ...req.body,
-      role:"Teacher"
+      role: "Teacher"
     }
     // console.log("hello",req.body)
     const user = await new Admin(body).save();
@@ -90,23 +95,39 @@ const createTeacher = {
   }
 }
 
-const updateTeacher = {
-  validation: {
-    body: Joi.object().keys({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
-      phone: Joi.string(),
-      gender: Joi.string(),
-      password:Joi.string(),
-      email:Joi.string()
-    }),
-  },
-  handler: async (req, res) => {
-    // console.log('hello', req.body)
-    const user = await Admin.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true });
-    return res.send(user);
+const updateTeacher = catchAsync(async (req, res) => {
+
+  console.log(req.params.id,"req.params.userId")
+  const userData = await Admin.findOne({ email: req.body.email, _id:{$ne : req.params.id} })
+  console.log(userData,"userData");
+  if (userData) {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: 'email already exists',
+    });
   }
-}
+  const user = await Admin.findOneAndUpdate(req.params.id, req.body);
+  res.send(user);
+});
+
+// const updateTeacher = {
+//   handler: async (req, res) => {
+//     const { _id } = req.params;
+
+//     const teacherExit = await Admin.findOne({ _id });
+//     if (!teacherExit) {
+//       throw new ApiError(httpStatus.BAD_REQUEST, 'Game not found');
+//     }
+
+//     // check if game already exists
+//     const teacherExits = await Admin.findOne({ name: req.body?.name, _id: { $ne: _id } }).exec();
+//     if (teacherExits) {
+//       throw new ApiError(httpStatus.BAD_REQUEST, 'Teacher already exists');
+//     }
+//     // update Admin
+//     const updateTeacher = await Admin.findOneAndUpdate({ _id }, req.body, { new: true })
+//     return res.status(httpStatus.OK).send(updateTeacher);
+//   }
+// };
 // const updateTeacher = catchAsync(async (req, res) => {
 //     const user = await Admin.findOneAndUpdate(req.params.userId, req.body);
 //     res.send(user);
@@ -115,7 +136,7 @@ const updateTeacher = {
 const getAllTeacher = {
   handler: async (req, res) => {
     // const users = await userService.getAllTeacher();
-    const user=await Admin.find();
+    const user = await Admin.find();
     return res.status(httpStatus.OK).send(user);
   }
 }
