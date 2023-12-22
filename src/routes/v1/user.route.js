@@ -14,7 +14,7 @@ const router = express.Router();
 router.post('/teacher/create',validate(userController.createTeacher.validation), catchAsync(userController.createTeacher.handler));
 router.put('/teacher/update/:id', validate(userController.updateTeacher.validation), catchAsync(userController.updateTeacher.handler));
 router.get('/teacher/get',catchAsync(userController.getAllTeacher.handler));
-router.delete('/teacher/delete/:id', catchAsync(userController.deleteTeacher.handler));
+router.delete('/teacher/delete/:id',  catchAsync(userController.deleteTeacher.handler));
 
 
 // router.handler.handler.handler.handler
