@@ -56,9 +56,23 @@ const deleteTeacher = {
   }
 };
 
-// const getMe = catchAsync(async (req, res) => {
-//   const user = await userService.getUserById(req.user._id);
-//   res.send(user);
+
+
+const getMe = catchAsync(async (req, res) => {
+  // const user = await userService.getUserById(req.user.id);
+  const user = await Admin.findOne(req.params.id);
+  return res.send(user)
+});
+
+// const updateMe = catchAsync(async (req, res) => {
+
+//   if (req.files && req.files?.profileImage) {
+//     const { upload_path } = await saveFile(req.files?.profileImage);
+//     req.body.profileImage = upload_path;
+//   }
+
+//     const user = await Admin.updateUserById(req.user.id, req.body);
+//     res.send(user);
 // });
 // const updateMe = catchAsync(async (req, res) => {
 //   // const user = await userService.getUserById(req.user.id);
@@ -147,7 +161,7 @@ module.exports = {
   // getUser,
   // updateUser,
   // deleteUser,
-  // getMe,
+  getMe,
   // updateMe,
   getAllTeacher,
   updateTeacher,
