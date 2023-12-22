@@ -15,7 +15,7 @@ router.post('/teacher/create',validate(userController.createTeacher.validation),
 router.put('/teacher/update/:id', catchAsync(userController.updateTeacher));
 // router.put('/teacher/update/:id', catchAsync(userController.updateTeacher.handler));
 router.get('/teacher/get',catchAsync(userController.getAllTeacher.handler));
-router.delete('/teacher/delete/:id', catchAsync(userController.deleteTeacher.handler));
+router.delete('/teacher/delete/:id',  catchAsync(userController.deleteTeacher.handler));
 // router.put('/teacher/me',userController.updateMe);
 
 router.get('/teacher/me',userController.getMe);
