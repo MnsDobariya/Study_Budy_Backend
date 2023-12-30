@@ -11,7 +11,7 @@ const tokenSchema = mongoose.Schema(
     },
     user: {
       type: mongoose.SchemaTypes.ObjectId,
-      ref: 'User',
+      ref: 'Admin',
       required: true,
     },
     type: {

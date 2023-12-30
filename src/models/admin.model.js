@@ -39,9 +39,30 @@ const adminSchema = mongoose.Schema({
         },
         private: true,
     },
+    confirmPassword: {
+        type: String,
+        // required: true,
+        minlength: 8,
+        trim: true,
+        validate(value) {
+            if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+                throw new Error('Password must contain at least one letter and one number');
+            }
+        },
+        private: true, // used by the toJSON plugin
+    }, 
+    token: {
+      type: String,
+    //   required: true,
+      index: true,
+    },
+    generateOTP: {
+        type: String,
+        required: false,
+    },
     role: {
         type: String,
-        enum: ["Teacher",'User','Admin'],
+        enum: ["Teacher", 'User', 'Admin'],
         default: 'User',
     },
     gender: {
@@ -81,9 +102,12 @@ adminSchema.pre('save', async function (next) {
     const admin = this;
     if (admin.isModified('password')) {
         admin.password = await bcrypt.hash(admin.password, 8);
+        // admin.confirmPassword = await bcrypt.hash(admin.confirmPassword, 8);
     }
     next();
 });
+
+
 
 
 /**

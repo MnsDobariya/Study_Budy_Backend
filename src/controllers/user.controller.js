@@ -45,13 +45,13 @@ const deleteTeacher = {
     const user = await Admin.findById(req.params.id);
     if (!user) {
       return res.status(httpStatus.NOT_FOUND).send({
-        message: 'ContactUs not found',
+        message: 'Teacher not found',
       });
     }
     console.log("hhjj",req.params.id);
     await Admin.findByIdAndDelete(req.params.id);
     return res.status(httpStatus.OK).send({
-      message: 'ContactUs deleted successfully',
+      message: 'Teacher deleted successfully',
     });
   }
 };
