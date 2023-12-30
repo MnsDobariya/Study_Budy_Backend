@@ -3,3 +3,4 @@ module.exports.adminController = require('./admin.controller');
 module.exports.userController = require('./user.controller');
 module.exports.gameController = require('./game.controller');
 module.exports.contactUsController = require('./contactUs.controller');
+module.exports.todosController = require('./todos.controller');
