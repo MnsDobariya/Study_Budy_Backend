@@ -65,6 +65,9 @@ const adminSchema = mongoose.Schema({
         enum: ["Teacher", 'User', 'Admin'],
         default: 'User',
     },
+    profileImage: {
+        type:String
+    },
     gender: {
         type: String
     },
