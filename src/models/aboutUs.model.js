@@ -33,7 +33,7 @@ const aboutUsSchema = mongoose.Schema(
 
 aboutUsSchema.plugin(toJSON);
 
-/**
+/***
  * @typedef AboutUs
  */
 

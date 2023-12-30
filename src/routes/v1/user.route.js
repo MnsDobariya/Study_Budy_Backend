@@ -17,6 +17,8 @@ router.put('/teacher/update/:id', catchAsync(userController.updateTeacher));
 router.get('/teacher/get',catchAsync(userController.getAllTeacher.handler));
 router.delete('/teacher/delete/:id', catchAsync(userController.deleteTeacher.handler));
 // router.put('/teacher/me',userController.updateMe);
+router.delete('/teacher/delete/:id',  catchAsync(userController.deleteTeacher.handler));
+
 
 // router.handler.handler.handler.handler
 //   .route('/:userId')
