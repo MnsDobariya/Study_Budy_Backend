@@ -58,11 +58,16 @@ const deleteTeacher = {
 
 
 
-const getMe = catchAsync(async (req, res) => {
-  // const user = await userService.getUserById(req.user.id);
-  const user = await Admin.findOne(req.params.id);
-  return res.send(user)
-});
+// const getMe = catchAsync(async (req, res) => {
+//   // const user = await userService.getUserById(req.user.id);
+//   const user = await Admin.findOne(req.params.id);
+//   return res.send(user)
+// });
+
+const getMe = catchAsync(async(req,res) => {
+  const user = await userService.getUserById(req.user.id);
+  res.send(user);
+})
 
 // const updateMe = catchAsync(async (req, res) => {
 
@@ -106,6 +111,28 @@ const createTeacher = {
     // console.log("hello",req.body)
     const user = await new Admin(body).save();
     return res.status(httpStatus.CREATED).send(user);
+  }
+}
+
+const updateMe = {
+  validation:{
+    body:Joi.object().keys({
+      firstName: Joi.string(),
+      lastName: Joi.string(),
+      email: Joi.string(),
+      phone: Joi.string(),
+      profileImage:Joi.string(),
+      gender: Joi.string(),
+    }),
+  },
+  handler:async(req,res) => {
+    if (req.files && req.files?.profileImage) {
+      const { upload_path } = await saveFile(req.files?.profileImage);
+      req.body.profileImage = upload_path;
+    }
+
+    const user = await Admin.findByIdAndUpdate(req.user.id, req.body,{new:true});
+    res.send(user);
   }
 }
 
@@ -162,6 +189,7 @@ module.exports = {
   // updateUser,
   // deleteUser,
   getMe,
+  updateMe,
   // updateMe,
   getAllTeacher,
   updateTeacher,
