@@ -6,4 +6,5 @@ module.exports.ContactUs = require('./contactUs.model');
 module.exports.AboutUs = require('./aboutUs.model');
 module.exports.Assignments=require('./assignments.models');
 module.exports.ToDos = require('./todos.model');
+module.exports.Event = require('./event.model');
 

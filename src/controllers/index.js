@@ -5,3 +5,4 @@ module.exports.gameController = require('./game.controller');
 module.exports.contactUsController = require('./contactUs.controller');
 module.exports.assignmentsController=require('./assignments.controller');
 module.exports.todosController = require('./todos.controller');
+module.exports.eventController=require('./event.controller');

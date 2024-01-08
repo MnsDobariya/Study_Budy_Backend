@@ -7,6 +7,7 @@ const contactUsRoute = require('./contactUs.route');
 const aboutUsRoute = require('./aboutUs.route');
 const assignmentsRoute = require('./assignments.route');
 const toDosRoute = require('./todos.route');
+const eventRoute=require('./event.route');
 
 const router = express.Router();
 
@@ -14,6 +15,10 @@ const defaultRoutes = [
   {
     path: '/auth',
     route: authRoute,
+  },
+  {
+    path: '/event',
+    route: eventRoute,
   },
   {
     path: '/admin',

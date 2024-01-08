@@ -111,7 +111,8 @@ const createTeacher = {
 
 const updateTeacher = catchAsync(async (req, res) => {
 
-  console.log(req.params.id,"req.params.userId")
+  console.log(req.body,"req.params.userId")
+  console.log(req.params.id,"req.params.id");
   const userData = await Admin.findOne({ email: req.body.email, _id:{$ne : req.params.id} })
   console.log(userData,"userData");
   if (userData) {
@@ -119,7 +120,7 @@ const updateTeacher = catchAsync(async (req, res) => {
       message: 'email already exists',
     });
   }
-  const user = await Admin.findOneAndUpdate(req.params.id, req.body);
+  const user = await Admin.findOneAndUpdate(req.params.id, req.body, {new: true});
   res.send(user);
 });
 

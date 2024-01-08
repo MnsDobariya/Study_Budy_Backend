@@ -15,7 +15,7 @@ const createAssignments = {
     },
     handler: async (req, res) => {
         console.log('req.user', req.user);
-    const userData = await Assignments.findOne({title:req.body.title})
+        const userData = await Assignments.findOne({ title: req.body.title })
 
         if (userData) {
             return res.status(httpStatus.BAD_REQUEST).send({
@@ -43,7 +43,13 @@ const updateAssignments = {
         }),
     },
     handler: async (req, res) => {
-        await Assignments.findByIdAndUpdate({ _id: req.params.id },{userId}, req.body, { new: true });
+        const assignment = await Assignments.findOne({ _id: req.params.id })
+        if (!assignment) {
+            return res.status(httpStatus.BAD_REQUEST).send({
+                message: 'Assignment Not Found',
+            });
+        }
+        await Assignments.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
         return res.send({ message: "assignments update successfully" });
     }
 };
@@ -57,11 +63,11 @@ const deleteAssignments = {
     }
 };
 
-const getAssignments={
+const getAssignments = {
     handler: async (req, res) => {
         const assignments = await Assignments.find();
         return res.status(httpStatus.OK).send(assignments);
-    }
+    }
 
 }
 
