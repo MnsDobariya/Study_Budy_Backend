@@ -8,6 +8,7 @@ const aboutUsRoute = require('./aboutUs.route');
 const assignmentsRoute = require('./assignments.route');
 const toDosRoute = require('./todos.route');
 const eventRoute=require('./event.route');
+const resourcesRouter = require('./resources.route');
 
 const router = express.Router();
 
@@ -31,6 +32,10 @@ const defaultRoutes = [
   {
     path: '/todos',
     route: toDosRoute,
+  },
+  {
+    path: '/resources',
+    route: resourcesRouter,
   },
   {
     path: '/games',

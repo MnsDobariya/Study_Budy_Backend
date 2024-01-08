@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { User } = require('../models');
+const { User, Admin } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const createUser = async (userBody) => {
@@ -16,7 +16,7 @@ const queryUsers = async (filter, options) => {
 
 
 const getUserById = async (id) => {
-  return User.findById(id);
+  return Admin.findById(id);
 };
 
 const getUserByEmail = async (email) => {
