@@ -8,4 +8,5 @@ module.exports.Assignments=require('./assignments.models');
 module.exports.ToDos = require('./todos.model');
 module.exports.Event = require('./event.model');
 module.exports.Resources = require('./resources.modal');
+module.exports.Notification=require('./notification.model');
 
