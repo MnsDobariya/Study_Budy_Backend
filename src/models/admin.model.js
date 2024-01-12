@@ -66,10 +66,25 @@ const adminSchema = mongoose.Schema({
         default: 'User',
     },
     profileImage: {
-        type:String
+        type:String,
     },
     gender: {
-        type: String
+        type: String,
+    },
+    birthday:{
+        type:String,
+    },
+    spId:{
+        type:String,
+    },
+    year:{
+        type:String,
+    },
+    semester:{
+        type:String,
+    },
+    division:{
+        type:String,
     },
 },
     {

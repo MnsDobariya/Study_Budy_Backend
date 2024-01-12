@@ -21,7 +21,7 @@ router.delete('/teacher/delete/:id',  catchAsync(userController.deleteTeacher.ha
 
 
 router.get('/teacher/me',auth(),userController.getMe);
-router.put('/teacher/updateme',auth(),validate(userController.updateMe.handler),catchAsync(userController.updateMe.handler));
+router.put('/teacher/updateme',auth(),validate(userController.updateMe.validation),catchAsync(userController.updateMe.handler));
 // router.put('/teacher/update:id', validate(userController.updateTeacher.validation), catchAsync(userController.updateTeacher.handler));
 
 

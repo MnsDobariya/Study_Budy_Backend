@@ -64,10 +64,14 @@ const deleteTeacher = {
 //   return res.send(user)
 // });
 
-const getMe = catchAsync(async(req,res) => {
+const getMe = catchAsync(async (req, res) => {
   const user = await userService.getUserById(req.user.id);
   res.send(user);
 })
+
+// const getImage = catchAsync(async (profileImage) => {
+//    await userService.getUserImage(profileImage);
+// })
 
 // const updateMe = catchAsync(async (req, res) => {
 
@@ -115,39 +119,44 @@ const createTeacher = {
 }
 
 const updateMe = {
-  validation:{
-    body:Joi.object().keys({
+  validation: {
+    body: Joi.object().keys({
       firstName: Joi.string(),
       lastName: Joi.string(),
       email: Joi.string(),
       phone: Joi.string(),
-      profileImage:Joi.string(),
+      profileImage: Joi.string(),
       gender: Joi.string(),
-    }),
+      birthday:Joi.string(),
+      spId:Joi.string(),
+      year:Joi.string(),
+      semester:Joi.string(),
+      division:Joi.string()
+    })
   },
-  handler:async(req,res) => {
+  handler: async (req, res) => {
     if (req.files && req.files?.profileImage) {
       const { upload_path } = await saveFile(req.files?.profileImage);
       req.body.profileImage = upload_path;
     }
 
-    const user = await Admin.findByIdAndUpdate(req.user.id, req.body,{new:true});
+    const user = await userService.updateUserById(req.user.id, req.body);
     res.send(user);
   }
 }
 
 const updateTeacher = catchAsync(async (req, res) => {
 
-  console.log(req.body,"req.params.userId")
-  console.log(req.params.id,"req.params.id");
-  const userData = await Admin.findOne({ email: req.body.email, _id:{$ne : req.params.id} })
-  console.log(userData,"userData");
+  console.log(req.body, "req.params.userId")
+  console.log(req.params.id, "req.params.id");
+  const userData = await Admin.findOne({ email: req.body.email, _id: { $ne: req.params.id } })
+  console.log(userData, "userData");
   if (userData) {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: 'email already exists',
     });
   }
-  const user = await Admin.findOneAndUpdate(req.params.id, req.body, {new: true});
+  const user = await Admin.findOneAndUpdate(req.params.id, req.body, { new: true });
   res.send(user);
 });
 
