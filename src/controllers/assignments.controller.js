@@ -65,11 +65,19 @@ const deleteAssignments = {
 
 const getAssignments = {
     handler: async (req, res) => {
-        const assignments = await Assignments.find();
-        return res.status(httpStatus.OK).send(assignments);
+        const page = parseInt(req.query.page || 1);
+        const limit = parseInt(req.query.limit || 10);
+        const skipValue = limit * page - limit;
+        console.log("hello",typeof req.query.page);
+
+        const assignment = await Assignments.find({
+            ...(req.query?.title && { title: req.query?.title })
+        }).limit(limit).skip(skipValue);
+        return res.status(httpStatus.OK).send(assignment);
     }
 
 }
+      
 
 module.exports = {
     createAssignments,

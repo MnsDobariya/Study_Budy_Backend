@@ -191,6 +191,13 @@ const getAllTeacher = {
     return res.status(httpStatus.OK).send(user);
   }
 }
+const getSearchName = {
+  handler: async (req, res) => {
+    // const users = await userService.getAllTeacher();
+    const user = await Admin.find({firstName: req.body.firstName, _id: { $ne: req.params.id }});
+    return res.status(httpStatus.OK).send(user);
+  }
+}
 
 module.exports = {
   createTeacher,
@@ -203,5 +210,6 @@ module.exports = {
   // updateMe,
   getAllTeacher,
   updateTeacher,
-  deleteTeacher
+  deleteTeacher,
+  getSearchName
 };
