@@ -10,6 +10,8 @@ const toDosRoute = require('./todos.route');
 const eventRoute=require('./event.route');
 const resourcesRouter = require('./resources.route');
 const notificationRoute = require('./notification.route');
+const roomRoute = require('./room.route');
+const chatRoute = require('./chat.route');
 
 const router = express.Router();
 
@@ -57,6 +59,14 @@ const defaultRoutes = [
   {
     path: '/notification',
     route: notificationRoute,
+  },
+  {
+    path: '/room',
+    route: roomRoute,
+  },
+  {
+    path: '/chat',
+    route: chatRoute,
   },
 ];
 
