@@ -26,34 +26,28 @@ const httpStatus = require("http-status");
 //                 message: 'Room already exists',
 //             });
 //         }
-        
+
 //         const body = {
 //             ...req.body,
 //             senderId: req.user._id
 //         }
 //         const chat = await new Chat(body).save();
 //         return res.status(httpStatus.CREATED).send(chat);
-        
+
 //     }
 // }
 
 const createChat = {
     validation: {
         body: Joi.object().keys({
-            receiverId:Joi.string().required(),
-            roomId:Joi.string().required(),
-            message:Joi.string()
+            receiverId: Joi.string().required(),
+            roomId: Joi.string().required(),
+            message: Joi.string()
         })
     },
     handler: async (req, res) => {
         console.log('req.user', req.body);
-        const userData = await Chat.findOne({ roomId: req.body.roomId })
 
-        if (userData) {
-            return res.status(httpStatus.BAD_REQUEST).send({
-                message: 'Room already exists',
-            });
-        }
         const body = {
             ...req.body,
             senderId: req.user._id
@@ -67,15 +61,21 @@ const createChat = {
 
 const getChat = {
     handler: async (req, res) => {
+        if (!req.query?.roomId) {
+            return res.status(httpStatus.BAD_REQUEST).send({
+                message: 'RoomId is Required',
+            });
+        }
+        const chat = await Chat.find({ roomId: req.query.roomId });
 
-        const chat = await Chat.findOne({roomId: req.body.roomId, _id: { $ne: req.params.id }});
+        console.log(chat,'chat')
         return res.status(httpStatus.OK).send(chat);
-      }
+    }
 }
 
 
 module.exports = {
     createChat,
     getChat,
-    
+
 }
