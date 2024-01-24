@@ -193,8 +193,13 @@ const getAllTeacher = {
 }
 const getSearchName = {
   handler: async (req, res) => {
+    if (!req?.query?.firstName) {
+      return res.status(httpStatus.BAD_REQUEST).send({
+          message: 'Record Not Found',
+      });
+  }
     // const users = await userService.getAllTeacher();
-    const user = await Admin.find({firstName: req.body.firstName, _id: { $ne: req.params.id }});
+    const user = await Admin.find({firstName:req?.query?.firstName});
     return res.status(httpStatus.OK).send(user);
   }
 }
