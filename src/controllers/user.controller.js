@@ -199,7 +199,7 @@ const getSearchName = {
       });
   }
     // const users = await userService.getAllTeacher();
-    const user = await Admin.find({firstName:req?.query?.firstName});
+    const user = await Admin.find({firstName:req?.query?.firstName}).populate('receiverId');
     return res.status(httpStatus.OK).send(user);
   }
 }

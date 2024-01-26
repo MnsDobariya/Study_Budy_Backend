@@ -66,7 +66,7 @@ const getChat = {
                 message: 'RoomId is Required',
             });
         }
-        const chat = await Chat.find({ roomId: req.query.roomId });
+        const chat = await Chat.find({ roomId: req.query.roomId }).populate(['receiverId','senderId']);
 
         console.log(chat,'chat')
         return res.status(httpStatus.OK).send(chat);
