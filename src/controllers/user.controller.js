@@ -6,7 +6,7 @@ const { userService } = require('../services');
 const Joi = require('joi');
 const { saveFile } = require('../utils/helper');
 const { password } = require('../validations/custom.validation');
-const { Admin, User } = require('../models');
+const { Admin, User, Room } = require('../models');
 const { log } = require('../config/logger');
 
 // const createUser = catchAsync(async (req, res) => {
@@ -48,7 +48,7 @@ const deleteTeacher = {
         message: 'Teacher not found',
       });
     }
-    console.log("hhjj", req.params.id);
+    // console.log("hhjj", req.params.id);
     await Admin.findByIdAndDelete(req.params.id);
     return res.status(httpStatus.OK).send({
       message: 'Teacher deleted successfully',
@@ -147,10 +147,10 @@ const updateMe = {
 
 const updateTeacher = catchAsync(async (req, res) => {
 
-  console.log(req.body, "req.params.userId")
-  console.log(req.params.id, "req.params.id");
+  // console.log(req.body, "req.params.userId")
+  // console.log(req.params.id, "req.params.id");
   const userData = await Admin.findOne({ email: req.body.email, _id: { $ne: req.params.id } })
-  console.log(userData, "userData");
+  // console.log(userData, "userData");
   if (userData) {
     return res.status(httpStatus.BAD_REQUEST).send({
       message: 'email already exists',
@@ -191,18 +191,82 @@ const getAllTeacher = {
     return res.status(httpStatus.OK).send(user);
   }
 }
+// const getSearchName = {
+//   handler: async (req, res) => {
+//     if (!req?.query?.firstName) {
+//       return res.status(httpStatus.BAD_REQUEST).send({
+//           message: 'Record Not Found',
+//       });
+//   }
+//     // const users = await userService.getAllTeacher();
+//     const user = await Admin.find({firstName:req?.query?.firstName}).populate('receiverId');
+//     // const room = await Room.find({roomId:req?.query?._id});
+//     // console.log(room,"room");
+//     // const searchId = await Admin.aggregate([
+//     //   {
+//     //     '$match':{
+//     //       $or:[
+//     //         {
+//     //           admin:req?.query?._id,
+//     //         },
+//     //         {
+//     //           roomId:req?.query?._id
+//     //         }
+//     //       ]
+//     //     }
+//     //   }
+//     // ])
+//     // console.log(searchId,"searchId");
+//     // const filter = pick(searchId,['name','role']);
+//     // const options = pick(searchId,['sortBy']);
+//     // const result = await userService.queryUsers(filter,options);
+//     return res.status(httpStatus.OK).send(user);
+//   }
+// }
+
 const getSearchName = {
   handler: async (req, res) => {
     if (!req?.query?.firstName) {
       return res.status(httpStatus.BAD_REQUEST).send({
-          message: 'Record Not Found',
+        message: 'User Not Found',
       });
+    }
+
+    try {
+      const user = await Admin.findOne({ firstName: req?.query?.firstName }).populate('receiverId');
+
+      // Find existing room IDs
+      const existingRooms = await Room.find({}, { _id: 1 });
+      const existingRoomIds = existingRooms.map(room => room._id.toString());
+
+      const rooms = await Room.aggregate([
+        {
+          '$match': {
+            $or: [
+              { senderId: user._id },
+              { receiverId: user._id }
+            ]
+          }
+        }
+      ]);
+
+      // Filter out existing room IDs
+      const filteredRooms = rooms.filter(room => !existingRoomIds.includes(room._id.toString()));
+
+      const filter = pick(req.query, ['firstName']);
+      const options = req.query ? pick(req.query, ['sortBy', 'limit', 'page']) : {};
+      const result = await userService.queryUsers(filter, options);
+
+      // Send both user and filtered rooms
+      return res.status(httpStatus.OK).send({ user, rooms: filteredRooms, result });
+    } catch (error) {
+      console.error(error);
+      return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+        message: 'Internal Server Error',
+      });
+    }
   }
-    // const users = await userService.getAllTeacher();
-    const user = await Admin.find({firstName:req?.query?.firstName}).populate('receiverId');
-    return res.status(httpStatus.OK).send(user);
-  }
-}
+};
 
 module.exports = {
   createTeacher,
