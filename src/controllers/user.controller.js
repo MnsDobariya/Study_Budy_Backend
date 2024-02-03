@@ -127,11 +127,11 @@ const updateMe = {
       phone: Joi.string(),
       profileImage: Joi.string(),
       gender: Joi.string(),
-      birthday:Joi.string(),
-      spId:Joi.string(),
-      year:Joi.string(),
-      semester:Joi.string(),
-      division:Joi.string()
+      birthday: Joi.string(),
+      spId: Joi.string(),
+      year: Joi.string(),
+      semester: Joi.string(),
+      division: Joi.string()
     })
   },
   handler: async (req, res) => {
@@ -228,45 +228,31 @@ const getSearchName = {
   handler: async (req, res) => {
     if (!req?.query?.firstName) {
       return res.status(httpStatus.BAD_REQUEST).send({
-        message: 'User Not Found',
+        message: 'Record Not Found',
       });
     }
-
-    try {
-      const user = await Admin.findOne({ firstName: req?.query?.firstName }).populate('receiverId');
-
-      // Find existing room IDs
-      const existingRooms = await Room.find({}, { _id: 1 });
-      const existingRoomIds = existingRooms.map(room => room._id.toString());
-
-      const rooms = await Room.aggregate([
+    const user = await Admin.find({ firstName: req?.query?.firstName }).populate('receiverId').lean();
+    const room = await Room.find({
+      $or: [
         {
-          '$match': {
-            $or: [
-              { senderId: user._id },
-              { receiverId: user._id }
-            ]
-          }
+          senderId: req.user._id,
+        },
+        {
+          receiverId: req.user._id,
         }
-      ]);
+      ]
+    })
 
-      // Filter out existing room IDs
-      const filteredRooms = rooms.filter(room => !existingRoomIds.includes(room._id.toString()));
+    // console.log(room)
+    const existUser = room?.map((item)=> item?.receiverId == req.user._id ? String(item?.senderId) : String(item?.receiverId));
+    console.log('existUser', existUser)
 
-      const filter = pick(req.query, ['firstName']);
-      const options = req.query ? pick(req.query, ['sortBy', 'limit', 'page']) : {};
-      const result = await userService.queryUsers(filter, options);
+    // console.log(existUser,'existUser')
 
-      // Send both user and filtered rooms
-      return res.status(httpStatus.OK).send({ user, rooms: filteredRooms, result });
-    } catch (error) {
-      console.error(error);
-      return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
-        message: 'Internal Server Error',
-      });
-    }
+    const result = user?.filter((item) => !existUser.includes(String(item?._id)))
+    return res.status(httpStatus.OK).send(result);
   }
-};
+}
 
 module.exports = {
   createTeacher,

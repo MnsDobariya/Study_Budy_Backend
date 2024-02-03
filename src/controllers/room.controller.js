@@ -13,7 +13,16 @@ const createRoom = {
     },
     handler: async (req, res) => {
         console.log('req.user', req.body);
-        const userData = await Room.findOne({ receiverId: req.body.receiverId })
+        const userData = await Room.findOne({  $or: [
+            {
+                senderId:  req.user._id,
+                receiverId: req.body.receiverId
+            },
+            {
+                receiverId:  req.user._id,
+                senderId: req.body.receiverId
+            }
+        ] })
 
         if (userData) {
             return res.status(httpStatus.BAD_REQUEST).send({
@@ -87,7 +96,7 @@ const getRoom = {
                             }
                         }, {
                             '$sort': {
-                                'created_at': -1
+                                'createdAt': -1
                             }
                         }
                     ],
@@ -97,7 +106,7 @@ const getRoom = {
                 '$project': {
                     'sender': 1,
                     'receiver': 1,
-                    'created_at': 1,
+                    'createdAt': 1,
                     'messager': {
                         '$arrayElemAt': [
                             '$receiver_messager', 0
