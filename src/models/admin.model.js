@@ -86,6 +86,9 @@ const adminSchema = mongoose.Schema({
     division:{
         type:String,
     },
+    otherDivision:{
+        type:String,
+    },
 },
     {
         timestamps: true,

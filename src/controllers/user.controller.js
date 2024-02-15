@@ -131,7 +131,8 @@ const updateMe = {
       spId: Joi.string(),
       year: Joi.string(),
       semester: Joi.string(),
-      division: Joi.string()
+      division: Joi.string(),
+      otherDivision: Joi.string()
     })
   },
   handler: async (req, res) => {
