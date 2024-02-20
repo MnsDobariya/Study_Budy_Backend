@@ -97,7 +97,10 @@ const createTeacher = {
       email: Joi.string().required(),
       phone: Joi.string(),
       password: Joi.string().custom(password),
-      gender: Joi.string()
+      gender: Joi.string(),
+      year: Joi.string(),
+      semester: Joi.string(),
+      division: Joi.string(),
     })
   },
   handler: async (req, res) => {

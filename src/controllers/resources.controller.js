@@ -64,7 +64,35 @@ const deleteResources = {
 
 const getResources = {
     handler: async (req, res) => {
-        const resources = await Resources.find();
+        // const resources = await Resources.find()
+        // const resources = await Resources.find({ year: req.query.year }).populate({
+        //     path: "createdBy",
+        //     match: {
+        //         year: req.user.year
+        //     },
+        // });
+        const resources =  await Resources.aggregate(
+            [
+                {
+                  $lookup: {
+                    from: 'admins',
+                    localField: 'createdBy',
+                    foreignField: '_id',
+                    as: 'createdBy'
+                  }
+                },
+                {
+                  $unwind: {
+                    path: '$createdBy',
+                    preserveNullAndEmptyArrays: true
+                  }
+                },
+                { $match: { 'createdBy.year': req.user.year } }
+              ],
+          );
+        console.log('resources', resources)
+        // const resources = await Resources.find();
+
         return res.status(httpStatus.OK).send(resources);
     }
 }
