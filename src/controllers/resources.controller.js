@@ -71,6 +71,8 @@ const getResources = {
         //         year: req.user.year
         //     },
         // });
+        
+
         const resources =  await Resources.aggregate(
             [
                 {
@@ -87,10 +89,11 @@ const getResources = {
                     preserveNullAndEmptyArrays: true
                   }
                 },
-                { $match: { 'createdBy.year': req.user.year } }
+                ...(req.user.role != "Admin" ? [{ $match: { 'createdBy.year': req.user.year } }] : []),
+                ...(req.query.year ? [{ $match: { 'createdBy.year': req.query.year } }] : []),
               ],
           );
-        console.log('resources', resources)
+        // console.log('resources', resources)
         // const resources = await Resources.find();
 
         return res.status(httpStatus.OK).send(resources);

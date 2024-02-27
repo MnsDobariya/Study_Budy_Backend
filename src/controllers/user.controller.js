@@ -230,12 +230,22 @@ const getAllTeacher = {
 
 const getSearchName = {
   handler: async (req, res) => {
+
+    // console.log(req?.user,"userjjjjjjjjj");
+
     if (!req?.query?.firstName) {
       return res.status(httpStatus.BAD_REQUEST).send({
         message: 'Record Not Found',
       });
     }
-    const user = await Admin.find({ firstName: req?.query?.firstName }).populate('receiverId').lean();
+
+    if (req?.query?.role === "Admin") {
+      const users = await Admin.find()
+      return res.status(httpStatus.OK).send(users);
+    }
+
+    const user = await Admin.find({ firstName: req?.query?.firstName , year : req.user?.year }).populate('receiverId').lean();
+
     const room = await Room.find({
       $or: [
         {
@@ -248,10 +258,8 @@ const getSearchName = {
     })
 
     // console.log(room)
-    const existUser = room?.map((item)=> item?.receiverId == req.user._id ? String(item?.senderId) : String(item?.receiverId));
-    console.log('existUser', existUser)
+    const existUser = room?.map((item) => item?.receiverId == req.user._id ? String(item?.senderId) : String(item?.receiverId));
 
-    // console.log(existUser,'existUser')
 
     const result = user?.filter((item) => !existUser.includes(String(item?._id)))
     return res.status(httpStatus.OK).send(result);
