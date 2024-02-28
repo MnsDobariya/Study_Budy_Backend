@@ -8,4 +8,5 @@ module.exports.todosController = require('./todos.controller');
 module.exports.notificationController=require('./notifications.controller');
 module.exports.roomController=require('./room.controller');
 module.exports.chatController=require('./chat.controller');
+module.exports.taskController=require('./task.controller');
 

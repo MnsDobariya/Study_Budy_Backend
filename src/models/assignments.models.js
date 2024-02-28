@@ -9,7 +9,7 @@ const assignmentsSchema = mongoose.Schema(
             required: true,
             trim: true,
         },
-        userId: {
+        createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Admin'
         },
@@ -30,10 +30,14 @@ const assignmentsSchema = mongoose.Schema(
         },
         status: {
             type: String,
-        }
-    },{
-        timestamps:true,
-    }
+        },
+        members: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Admin'
+        }]
+    }, {
+    timestamps: true,
+}
 )
 
 assignmentsSchema.plugin(toJSON);

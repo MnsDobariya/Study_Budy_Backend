@@ -7,6 +7,7 @@ const createAssignments = {
         body: Joi.object().keys({
             title: Joi.string().required(),
             status: Joi.string(),
+            members: Joi.array().required(),
             assignmentSummary: Joi.string().required(),
             startDate: Joi.string().required(),
             endDate: Joi.string().required(),
@@ -14,7 +15,6 @@ const createAssignments = {
         })
     },
     handler: async (req, res) => {
-        console.log('req.user', req.user);
         const userData = await Assignments.findOne({ title: req.body.title })
 
         if (userData) {
@@ -24,7 +24,8 @@ const createAssignments = {
         }
         const body = {
             ...req.body,
-            userId: req.user._id
+            createdBy: req.user._id,
+            members : [...req.body.members,req.user._id]
         }
         const assignments = await new Assignments(body).save();
         return res.status(httpStatus.CREATED).send(assignments);
@@ -68,20 +69,29 @@ const getAssignments = {
         const page = parseInt(req.query.page || 1);
         const limit = parseInt(req.query.limit || 10);
         const skipValue = limit * page - limit;
-        console.log("hello",typeof req.query.page);
+        console.log("hello", typeof req.query.page);
 
         const assignment = await Assignments.find({
-            ...(req.query?.title && { title: req.query?.title })
-        }).limit(limit).skip(skipValue);
+            ...(req.query?.title && { title: req.query?.title }),
+            members:{ $in : [req.user?._id]}
+        }).populate('members').limit(limit).skip(skipValue);
         return res.status(httpStatus.OK).send(assignment);
     }
 
 }
-      
+const getUser = {
+    handler: async (req, res) => {
+
+        
+        const user = await Admin.find({year:req.user.year, role : "User"})
+        return res(httpStatus.OK).send(user);
+    }
+}
 
 module.exports = {
     createAssignments,
     updateAssignments,
     deleteAssignments,
-    getAssignments
+    getAssignments,
+    getUser
 }

@@ -12,6 +12,7 @@ const resourcesRouter = require('./resources.route');
 const notificationRoute = require('./notification.route');
 const roomRoute = require('./room.route');
 const chatRoute = require('./chat.route');
+const taskRoute = require('./task.route');
 
 const router = express.Router();
 
@@ -67,6 +68,10 @@ const defaultRoutes = [
   {
     path: '/chat',
     route: chatRoute,
+  },
+  {
+    path: '/task',
+    route: taskRoute,
   },
 ];
 

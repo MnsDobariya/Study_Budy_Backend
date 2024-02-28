@@ -11,4 +11,6 @@ module.exports.Resources = require('./resources.modal');
 module.exports.Notification=require('./notification.model');
 module.exports.Room=require('./room.model');
 module.exports.Chat=require('./chat.model');
+module.exports.Task=require('./task.model');
+
 
