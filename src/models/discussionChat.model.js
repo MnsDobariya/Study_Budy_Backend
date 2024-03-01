@@ -3,11 +3,7 @@ const { toJSON } = require('./plugins');
 
 const discussionChatSchema = mongoose.Schema(
     {
-        // senderId:{
-        //     type:mongoose.Schema.Types.ObjectId,
-        //     ref:'Admin',
-        // },
-        receiverId:{
+        senderId:{
             type:mongoose.Schema.Types.ObjectId,
             ref:'Admin',
         },
@@ -17,7 +13,7 @@ const discussionChatSchema = mongoose.Schema(
         },
         discussionroomId:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:'Discussion Room',
+            ref:'DiscussionRoom',
             required:true,
         },
     },
@@ -31,6 +27,6 @@ discussionChatSchema.plugin(toJSON);
 /**
  * @typedef discussionChat
  */
-const discussionChat = mongoose.model('Discussion Chat', discussionChatSchema);
+const discussionChat = mongoose.model('DiscussionChat', discussionChatSchema);
 
 module.exports = discussionChat;

@@ -40,13 +40,11 @@ const httpStatus = require("http-status");
 const createDiscussionChat = {
     validation: {
         body: Joi.object().keys({
-            receiverId: Joi.string().required(),
             discussionroomId: Joi.string().required(),
-            message: Joi.string()
+            message: Joi.string().required()
         })
     },
     handler: async (req, res) => {
-        console.log('req.user', req.body);
 
         const body = {
             ...req.body,
@@ -66,7 +64,7 @@ const getDiscussionChat = {
                 message: 'RoomId is Required',
             });
         }
-        const discussionChat = await DiscussionChat.find({ discussionroomId: req.query.discussionroomId });
+        const discussionChat = await DiscussionChat.find({ discussionroomId: req.query.discussionroomId }).populate("senderId");
         return res.status(httpStatus.OK).send(discussionChat);
     }
 }

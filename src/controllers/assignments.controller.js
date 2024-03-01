@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { Assignments } = require("../models");
+const { Assignments, DiscussionRoom } = require("../models");
 const httpStatus = require("http-status");
 
 const createAssignments = {
@@ -28,6 +28,13 @@ const createAssignments = {
             members : [...req.body.members,req.user._id]
         }
         const assignments = await new Assignments(body).save();
+
+         await new DiscussionRoom({
+            createdBy : req.user._id,
+            assignmentId : assignments?._id,
+            members : [...req.body.members,req.user._id]
+         }).save();
+
         return res.status(httpStatus.CREATED).send(assignments);
     }
 }

@@ -8,25 +8,14 @@ const createDiscussionRoom = {
     validation: {
         body: Joi.object().keys({
             senderId: Joi.string(),
-            members:Joi.array().required()
+            members:Joi.array().required(),
+            assignmentId:Joi.string()
         })
     },
     handler: async (req, res) => {
         console.log('req.user', req.body);
-        const userData = await DiscussionRoom.findOne({  $or: [
-            {
-                senderId:  req.user._id,
-            },
-            {
-                senderId: req.body.receiverId
-            }
-        ] })
 
-        if (userData) {
-            return res.status(httpStatus.BAD_REQUEST).send({
-                message: 'Room already exists',
-            });
-        }
+    
         const body = {
             ...req.body,
             senderId: req.user._id
