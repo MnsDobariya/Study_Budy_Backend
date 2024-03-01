@@ -13,6 +13,8 @@ const notificationRoute = require('./notification.route');
 const roomRoute = require('./room.route');
 const chatRoute = require('./chat.route');
 const taskRoute = require('./task.route');
+const discussionRoomRoute = require('./discussionRoom.route');
+const discussionChatRoute = require('./discussionChat.route');
 
 const router = express.Router();
 
@@ -72,6 +74,14 @@ const defaultRoutes = [
   {
     path: '/task',
     route: taskRoute,
+  },
+  {
+    path: '/discussionRoom',
+    route: discussionRoomRoute,
+  },
+  {
+    path: '/discussionChat',
+    route: discussionChatRoute,
   },
 ];
 

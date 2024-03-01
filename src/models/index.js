@@ -12,5 +12,7 @@ module.exports.Notification=require('./notification.model');
 module.exports.Room=require('./room.model');
 module.exports.Chat=require('./chat.model');
 module.exports.Task=require('./task.model');
+module.exports.DiscussionRoom=require('./discussionRoom.model');
+module.exports.DiscussionChat=require('./discussionChat.model');
 
 

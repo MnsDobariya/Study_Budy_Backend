@@ -38,6 +38,6 @@ taskSchema.plugin(toJSON);
 /**
  * @typedef assignmentTask
  */
-const assignmentTask = mongoose.model('assignmentTask', taskSchema);
+const assignmentTask = mongoose.model('assignment Task', taskSchema);
 
 module.exports = assignmentTask;

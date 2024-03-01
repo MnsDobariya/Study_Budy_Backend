@@ -9,4 +9,6 @@ module.exports.notificationController=require('./notifications.controller');
 module.exports.roomController=require('./room.controller');
 module.exports.chatController=require('./chat.controller');
 module.exports.taskController=require('./task.controller');
+module.exports.discussionRoomController=require('./discussionRoom.controller');
+module.exports.discussionChatController=require('./discussionChat.controller');
 
