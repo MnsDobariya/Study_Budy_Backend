@@ -1,6 +1,10 @@
 const Joi = require("joi");
-const { Assignments, DiscussionRoom } = require("../models");
+const { Assignments, DiscussionRoom, Admin } = require("../models");
 const httpStatus = require("http-status");
+var ObjectID = require('mongodb').ObjectID;
+var objectId = new ObjectID();
+
+
 
 const createAssignments = {
     validation: {
@@ -25,15 +29,15 @@ const createAssignments = {
         const body = {
             ...req.body,
             createdBy: req.user._id,
-            members : [...req.body.members,req.user._id]
+            members: [...req.body.members, req.user._id]
         }
         const assignments = await new Assignments(body).save();
 
-         await new DiscussionRoom({
-            createdBy : req.user._id,
-            assignmentId : assignments?._id,
-            members : [...req.body.members,req.user._id]
-         }).save();
+        await new DiscussionRoom({
+            createdBy: req.user._id,
+            assignmentId: assignments?._id,
+            members: [...req.body.members, req.user._id]
+        }).save();
 
         return res.status(httpStatus.CREATED).send(assignments);
     }
@@ -76,22 +80,23 @@ const getAssignments = {
         const page = parseInt(req.query.page || 1);
         const limit = parseInt(req.query.limit || 10);
         const skipValue = limit * page - limit;
-        console.log("hello", typeof req.query.page);
 
         const assignment = await Assignments.find({
             ...(req.query?.title && { title: req.query?.title }),
-            members:{ $in : [req.user?._id]}
+            members: {
+                $in: req?.user?.id
+            }
         }).populate('members').limit(limit).skip(skipValue);
         return res.status(httpStatus.OK).send(assignment);
+
     }
+    
 
 }
 const getUser = {
     handler: async (req, res) => {
-
-        
-        const user = await Admin.find({year:req.user.year, role : "User"})
-        return res(httpStatus.OK).send(user);
+        const user = await Admin.find({ year: req.user.year, role: "User" })
+        return res.status(httpStatus.OK).send(user);
     }
 }
 

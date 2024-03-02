@@ -8,14 +8,14 @@ const createDiscussionRoom = {
     validation: {
         body: Joi.object().keys({
             senderId: Joi.string(),
-            members:Joi.array().required(),
-            assignmentId:Joi.string()
+            members: Joi.array().required(),
+            assignmentId: Joi.string()
         })
     },
     handler: async (req, res) => {
         console.log('req.user', req.body);
 
-    
+
         const body = {
             ...req.body,
             senderId: req.user._id
@@ -29,6 +29,7 @@ const createDiscussionRoom = {
 
 const getDiscussionRoom = {
     handler: async (req, res) => {
+
         // const room = await Room.aggregate([
         //     {
         //         '$match': {
@@ -102,7 +103,7 @@ const getDiscussionRoom = {
         //         }
         //     }
         // ]);
-        const discussionRoom=await DiscussionRoom.find();
+        const discussionRoom = await DiscussionRoom.findOne({ assignmentId: req?.query?.assignmentId }).populate('members')
         return res.status(httpStatus.OK).send(discussionRoom);
     }
 };
