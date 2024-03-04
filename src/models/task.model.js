@@ -16,7 +16,7 @@ const taskSchema = mongoose.Schema(
             type: String,
             require: true
         },
-        assignID: {
+        assignId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Admin'
         },

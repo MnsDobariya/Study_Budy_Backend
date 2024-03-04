@@ -48,6 +48,7 @@ const updateAssignments = {
         body: Joi.object().keys({
             title: Joi.string().required(),
             status: Joi.string(),
+            members: Joi.array().required(),
             assignmentSummary: Joi.string().required(),
             startDate: Joi.string().required(),
             endDate: Joi.string().required(),
@@ -86,7 +87,7 @@ const getAssignments = {
             members: {
                 $in: req?.user?.id
             }
-        }).populate('members').limit(limit).skip(skipValue);
+        }).populate("members").limit(limit).skip(skipValue);
         return res.status(httpStatus.OK).send(assignment);
 
     }
