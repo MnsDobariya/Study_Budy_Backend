@@ -10,11 +10,11 @@ const createAssignments = {
     validation: {
         body: Joi.object().keys({
             title: Joi.string().required(),
-            status: Joi.string(),
+            status: Joi.string().required(),
             members: Joi.array().required(),
             assignmentSummary: Joi.string().required(),
-            startDate: Joi.date().required(),
-            endDate: Joi.date().required(),
+            startDate: Joi.string().required(),
+            endDate: Joi.string().required(),
             projectDescription: Joi.string(),
         })
     },
@@ -48,10 +48,10 @@ const updateAssignments = {
         body: Joi.object().keys({
             title: Joi.string().required(),
             status: Joi.string(),
-            members: Joi.array(),
+            members: Joi.array().required(),
             assignmentSummary: Joi.string().required(),
-            startDate: Joi.date().required(),
-            endDate: Joi.date().required(),
+            startDate: Joi.string().required(),
+            endDate: Joi.string().required(),
             projectDescription: Joi.string(),
         }),
     },
@@ -63,7 +63,7 @@ const updateAssignments = {
             });
         }
         await Assignments.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
-        return res.send({ message: "assignments update successfully" });
+        return res.status(httpStatus.OK).send({ message: "assignments update successfully" });
     }
 };
 
@@ -78,16 +78,17 @@ const deleteAssignments = {
 
 const getAssignments = {
     handler: async (req, res) => {
-        const page = parseInt(req.query.page || 1);
-        const limit = parseInt(req.query.limit || 10);
-        const skipValue = limit * page - limit;
+        // const page = parseInt(req.query.page || 1);
+        // const limit = parseInt(req.query.limit || 10);
+        // const skipValue = limit * page - limit;
 
         const assignment = await Assignments.find({
             ...(req.query?.title && { title: req.query?.title }),
-            members: {
-                $in: req?.user?.id
-            }
-        }).populate("members").limit(limit).skip(skipValue);
+            // members: {
+            //     $in: req?.user?.id
+            // }
+        }).populate("members")
+        // .limit(limit).skip(skipValue);
         return res.status(httpStatus.OK).send(assignment);
 
     }
