@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const Joi = require('joi');
-const { Resources } = require('../models');
+const { Resources, Notification } = require('../models');
 const { saveFile } = require('../utils/helper');
 const ApiError = require('../utils/ApiError');
 
@@ -29,6 +29,13 @@ const creacteResources = {
             ...req.body,
             createdBy: req.user._id
         }
+        // send notification
+       const payload = {
+            title : "Test",
+            description : "Test",
+            createdBy : req.user._id
+        } 
+        await new Notification(payload).save();
         const resources = await new Resources(body).save();
         return res.status(httpStatus.CREATED).send(resources);
     }

@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { Assignments, DiscussionRoom, Admin } = require("../models");
+const { Assignments, DiscussionRoom, Admin, Notification } = require("../models");
 const httpStatus = require("http-status");
 var ObjectID = require('mongodb').ObjectID;
 var objectId = new ObjectID();
@@ -31,6 +31,16 @@ const createAssignments = {
             createdBy: req.user._id,
             members: [...req.body.members, req.user._id]
         }
+
+        //send notification 
+
+        const payload = {
+            title : "Add Assignment 😇",
+            description : "tets",
+            createdBy : req.user._id
+        } 
+        await new Notification(payload).save();
+
         const assignments = await new Assignments(body).save();
 
         await new DiscussionRoom({

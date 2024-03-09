@@ -4,49 +4,76 @@ const httpStatus = require("http-status");
 
 const createNotification = {
     validation: {
-        body:Joi.object().keys({
-            title:Joi.string().required(),
-            description:Joi.string().required()  
+        body: Joi.object().keys({
+            title: Joi.string().required(),
+            description: Joi.string().required()
         }),
     },
 
-    handler:async(req,res) => {
-     
+    handler: async (req, res) => {
+
         const body = {
             ...req.body,
-            createdBy:req.user._id
+            createdBy: req.user._id
         }
-        const notification  = await new Notification(body).save();
+        const notification = await new Notification(body).save();
         return res.status(httpStatus.CREATED).send(notification);
     }
 };
 
-const updateNotiication={
+const updateNotiication = {
     validation: {
-        body:Joi.object().keys({
-            title:Joi.string(),
-            description:Joi.string(),
+        body: Joi.object().keys({
+            title: Joi.string(),
+            description: Joi.string(),
         }),
     },
-    handler: async (req,res) => {
-      
-        const notification = await Notification.findByIdAndUpdate({_id:req.params.id},req.body,{new:true});
+    handler: async (req, res) => {
+
+        const notification = await Notification.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
         return res.send(notification);
     }
 }
 
 const deleteNotification = {
-    handler: async (req,res) => {
-        await Notification.findByIdAndDelete({_id:req.params.id});
+    handler: async (req, res) => {
+
+        await Notification.findOneAndUpdate({_id: req.params.id}, {$addToSet : {deletedBy : req.user._id }})
         return res.status(httpStatus.OK).send({
-            message:"Delete Successfully"
+            message: "Delete Successfully"
         });
     }
 }
 
 const getNotification = {
-    handler: async (req,res) => {
-        const notification = await Notification.find();
+    handler: async (req, res) => {
+        const notification = await Notification.aggregate(
+            [
+                {
+                    $lookup: {
+                        from: 'admins',
+                        localField: 'createdBy',
+                        foreignField: '_id',
+                        as: 'createdBy'
+                    }
+                },
+                {
+                    $unwind: {
+                        path: '$createdBy',
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
+                    $match: {
+                        'createdBy.year': req.user.year,
+                        deletedBy: {
+                            $nin: [req.user._id]
+                        }
+
+                    }
+                }
+            ],
+        );
         return res.status(httpStatus.OK).send(notification);
     }
 }
