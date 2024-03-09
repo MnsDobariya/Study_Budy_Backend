@@ -13,7 +13,11 @@ const notificationSchema = mongoose.Schema(
         },
         description:{
             type:String,
-        }
+        },
+        deletedBy:[{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:'Admin'
+        }]
     },
     {
         timestamps:true,
