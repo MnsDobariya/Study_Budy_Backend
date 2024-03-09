@@ -8,15 +8,18 @@ const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 
 
-const generateToken = (userId, expires, type, secret = config.jwt.secret) => {
+
+const generateToken = (userId, expiresInMinutes, type, secret = config.jwt.secret) => {
+  
   const payload = {
     sub: userId,
     iat: moment().unix(),
-    exp: expires.unix(),
     type,
   };
   return jwt.sign(payload, secret);
+  
 };
+
 
 
 const verifyToken = async (token, type) => {
