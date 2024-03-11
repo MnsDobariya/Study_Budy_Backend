@@ -36,7 +36,7 @@ const createAssignments = {
 
         const payload = {
             title : "Add Assignment 😇",
-            description : "tets",
+            description : "Please check the assignment and inform me when the assignment is over",
             createdBy : req.user._id
         } 
         await new Notification(payload).save();
