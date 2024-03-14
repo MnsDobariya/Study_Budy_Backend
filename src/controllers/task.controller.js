@@ -54,7 +54,7 @@ const updateTask = {
 
 const getTask = {
     handler: async (req, res) => {
-        const assignmentTask = await Task.find();
+        const assignmentTask = await Task.find({assignmentId:req.query.assignmentId});
         return res.status(httpStatus.OK).send(assignmentTask);
     }
 
