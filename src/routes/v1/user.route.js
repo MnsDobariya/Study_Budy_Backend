@@ -26,7 +26,7 @@ router.get('/teacher/me',auth(),userController.getMe);
 router.put('/teacher/updateme',auth(),validate(userController.updateMe.validation),catchAsync(userController.updateMe.handler));
 // router.put('/teacher/update:id', validate(userController.updateTeacher.validation), catchAsync(userController.updateTeacher.handler));
 
-
+router.get('/teacher/allUser/get',auth(),catchAsync(userController.getAllUser.handler));
 
 // router.handler.handler.handler.handler
 //   .route('/:userId')
