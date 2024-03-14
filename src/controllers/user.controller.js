@@ -195,6 +195,16 @@ const getAllTeacher = {
     return res.status(httpStatus.OK).send(user);
   }
 }
+
+const getAllUser = {
+  handler: async (req, res) => {
+    const user = await Admin.find({ year: req.user.year, role: "User" })
+    // console.log('user', user)
+    return res.status(httpStatus.OK).send(user);
+
+  }
+}
+
 // const getSearchName = {
 //   handler: async (req, res) => {
 //     if (!req?.query?.firstName) {
@@ -278,5 +288,6 @@ module.exports = {
   getAllTeacher,
   updateTeacher,
   deleteTeacher,
-  getSearchName
+  getSearchName,
+  getAllUser
 };
