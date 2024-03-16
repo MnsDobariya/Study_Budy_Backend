@@ -32,11 +32,12 @@ const createTask = {
 const updateTask = {
     validation: {
         body: Joi.object().keys({
-            dueDate: Joi.date().required(),
-            task: Joi.string().required(),
-            description: Joi.string().required(),
-            assignId: Joi.string().required(),
-            assignmentId: Joi.string().required(),
+            dueDate: Joi.date(),
+            task: Joi.string(),
+            description: Joi.string(),
+            assignId: Joi.string(),
+            assignmentId: Joi.string(),
+            isCompleted : Joi.boolean()
 
         }),
     },
@@ -48,6 +49,7 @@ const updateTask = {
             });
         }
         await Task.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
+        
         return res.send({ message: "Task update successfully" });
     }
 }
