@@ -13,7 +13,7 @@ const todosSchema = mongoose.Schema(
         task:{
             type:String,
         },
-        portable:{
+        priority:{
             type:String,
         },
         description:{

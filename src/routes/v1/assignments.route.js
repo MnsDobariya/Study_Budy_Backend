@@ -10,5 +10,6 @@ router.post('/create',auth(),validate(assignmentsController.createAssignments.va
 router.put('/update/:id',validate(assignmentsController.updateAssignments.validation),catchAsync(assignmentsController.updateAssignments.handler));
 router.delete('/delete/:id',catchAsync(assignmentsController.deleteAssignments.handler));
 router.get('/get',auth(),catchAsync(assignmentsController.getAssignments.handler));
+router.get('/getstatus',auth(),catchAsync(assignmentsController.getAssignmentsStatus.handler));
 router.get('/getUser',auth(),catchAsync(assignmentsController.getUser.handler));
 module.exports = router;    

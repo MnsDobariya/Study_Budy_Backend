@@ -9,7 +9,7 @@ const createToDos = {
         body: Joi.object().keys({
             deadlinedate: Joi.date().required(),
             task: Joi.string().required(),
-            portable: Joi.string().required(),
+            priority: Joi.string().required(),
             description: Joi.string().required()
         }),
     },
@@ -33,7 +33,7 @@ const updateToDos = {
         body: Joi.object().keys({
             deadlinedate: Joi.date(),
             task: Joi.string(),
-            portable: Joi.string(),
+            priority: Joi.string(),
             description: Joi.string()
         }),
     },
@@ -59,9 +59,24 @@ const getToDos = {
     }
 }
 
+const getTodoTask = {
+    handler:async (req,res) => {
+        const {priority} = req?.query;  
+        const filter = {};
+
+        if(priority){
+            filter.priority = priority;
+        }
+
+        const todos = await ToDos.find(filter);
+        return res.status(httpStatus.OK).send(todos);
+    }
+}
+
 module.exports = {
     createToDos,
     updateToDos,
     deleteToDos,
-    getToDos
+    getToDos,
+    getTodoTask,
 };
