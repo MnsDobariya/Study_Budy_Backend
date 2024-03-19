@@ -10,5 +10,6 @@ router.post('/create',auth(),validate(todosController.createToDos.validation),ca
 router.put('/update/:id',validate(todosController.updateToDos.validation),catchAsync(todosController.updateToDos.handler));
 router.delete('/delete/:id',catchAsync(todosController.deleteToDos.handler));
 router.get('/get',catchAsync(todosController.getToDos.handler));
+router.get('/getTask',catchAsync(todosController.getTodoTask.handler));
 
 module.exports = router;

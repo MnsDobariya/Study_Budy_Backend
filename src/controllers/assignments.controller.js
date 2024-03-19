@@ -35,10 +35,10 @@ const createAssignments = {
         //send notification 
 
         const payload = {
-            title : "Add Assignment 😇",
-            description : "Please check the assignment and inform me when the assignment is over",
-            createdBy : req.user._id
-        } 
+            title: "Add Assignment 😇",
+            description: "Please check the assignment and inform me when the assignment is over",
+            createdBy: req.user._id
+        }
         await new Notification(payload).save();
 
         const assignments = await new Assignments(body).save();
@@ -56,12 +56,12 @@ const createAssignments = {
 const updateAssignments = {
     validation: {
         body: Joi.object().keys({
-            title: Joi.string().required(),
+            title: Joi.string(),
             status: Joi.string(),
-            members: Joi.array().required(),
-            assignmentSummary: Joi.string().required(),
-            startDate: Joi.string().required(),
-            endDate: Joi.string().required(),
+            members: Joi.array(),
+            assignmentSummary: Joi.string(),
+            startDate: Joi.string(),
+            endDate: Joi.string(),
             projectDescription: Joi.string(),
         }),
     },
@@ -94,17 +94,32 @@ const getAssignments = {
 
         const assignment = await Assignments.find({
             ...(req.query?.title && { title: req.query?.title }),
-            // members: {
-            //     $in: req?.user?.id
-            // }
+            members: {
+                $in: req?.user?.id
+            }
         }).populate("members")
         // .limit(limit).skip(skipValue);
         return res.status(httpStatus.OK).send(assignment);
 
     }
-    
-
 }
+
+const getAssignmentsStatus = {
+    handler: async (req, res) => {
+        const { status } = req.query;
+        const filter = {};
+
+        if (status) {
+            filter.status = status;
+        }
+
+        const assignments = await Assignments.find(filter).populate("members");
+        return res.status(httpStatus.OK).send(assignments);
+    }
+}
+
+
+
 const getUser = {
     handler: async (req, res) => {
         const user = await Admin.find({ year: req.user.year, role: "User" })
@@ -117,5 +132,6 @@ module.exports = {
     updateAssignments,
     deleteAssignments,
     getAssignments,
-    getUser
+    getUser,
+    getAssignmentsStatus
 }
