@@ -61,14 +61,14 @@ const getToDos = {
 
 const getTodoTask = {
     handler:async (req,res) => {
-        const {priority} = req?.query;  
-        const filter = {};
+        // const {priority} = req?.query;  
+        // const filter = {};
 
-        if(priority){
-            filter.priority = priority;
-        }
+        // if(priority){
+        //     filter.priority = priority;
+        // }
 
-        const todos = await ToDos.find(filter);
+        const todos = await ToDos.find({priority:req?.query?.priority});
         return res.status(httpStatus.OK).send(todos);
     }
 }
