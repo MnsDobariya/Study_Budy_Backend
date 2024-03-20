@@ -47,34 +47,74 @@ const deleteNotification = {
 
 const getNotification = {
     handler: async (req, res) => {
-        const notification = await Notification.aggregate(
-            [
-                {
-                    $lookup: {
-                        from: 'admins',
-                        localField: 'createdBy',
-                        foreignField: '_id',
-                        as: 'createdBy'
-                    }
-                },
-                {
-                    $unwind: {
-                        path: '$createdBy',
-                        preserveNullAndEmptyArrays: true
-                    }
-                },
-                {
-                    $match: {
-                        'createdBy.year': req.user.year,
-                        deletedBy: {
-                            $nin: [req.user._id]
-                        }
 
+        if(req.user?.role == 'User'){
+            const notification = await Notification.aggregate(
+                [
+                    {
+                        $lookup: {
+                            from: 'admins',
+                            localField: 'createdBy',
+                            foreignField: '_id',
+                            as: 'createdBy'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: '$createdBy',
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $match: {
+                            'createdBy.year': req.user.year,
+                            'createdBy.role': 'Teacher',
+                            deletedBy: {
+                                $nin: [req.user._id]
+                            }
+    
+                        }
                     }
-                }
-            ],
-        );
-        return res.status(httpStatus.OK).send(notification);
+                ],
+            );
+            return res.status(httpStatus.OK).send(notification);
+        }
+
+
+        if(req.user?.role == 'Teacher'){
+            const notification = await Notification.aggregate(
+                [
+                    {
+                        $lookup: {
+                            from: 'admins',
+                            localField: 'createdBy',
+                            foreignField: '_id',
+                            as: 'createdBy'
+                        }
+                    },
+                    {
+                        $unwind: {
+                            path: '$createdBy',
+                            preserveNullAndEmptyArrays: true
+                        }
+                    },
+                    {
+                        $match: {
+                            'createdBy.year': req.user.year,
+                            'createdBy.role': 'User',
+                            deletedBy: {
+                                $nin: [req.user._id]
+                            }
+    
+                        }
+                    }
+                ],
+            );
+            return res.status(httpStatus.OK).send(notification);
+        }
+      
+      
+      
     }
 }
 

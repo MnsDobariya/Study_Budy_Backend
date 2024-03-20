@@ -29,17 +29,16 @@ const createAssignments = {
         const body = {
             ...req.body,
             createdBy: req.user._id,
-            members: [...req.body.members, req.user._id]
+            members: [...req.body.members, req.user._id],
         }
 
         //send notification 
-
-        const payload = {
-            title: "Add Assignment 😇",
-            description: "Please check the assignment and inform me when the assignment is over",
-            createdBy: req.user._id
+        const creationPayload = {
+            title: "New Assignment Created 📝",
+            description: "A new assignment has been created. Please review it.",
+            createdBy: req.user._id,
         }
-        await new Notification(payload).save();
+        await new Notification(creationPayload).save();
 
         const assignments = await new Assignments(body).save();
 
@@ -72,7 +71,19 @@ const updateAssignments = {
                 message: 'Assignment Not Found',
             });
         }
+
         await Assignments.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
+
+        if (req.body.status === "Finished") {
+            const completionPayload = {
+                title: "Assignment Completed 😇",
+                description: "The assignment has been completed. Please review it and provide feedback.",
+                createdBy: req.user._id,
+            }
+            await new Notification(completionPayload).save();
+        }
+
+
         return res.status(httpStatus.OK).send({ message: "assignments update successfully" });
     }
 };
@@ -106,14 +117,18 @@ const getAssignments = {
 
 const getAssignmentsStatus = {
     handler: async (req, res) => {
-        const { status } = req.query;
-        const filter = {};
+        // const { status } = req.query;
+        // const filter = {};
 
-        if (status) {
-            filter.status = status;
-        }
+        // if (status) {
+        //     filter.status = status;
+        // }
 
-        const assignments = await Assignments.find(filter).populate("members");
+        const assignments = await Assignments.find({
+            members: {
+                $in: req?.user?.id
+            }, status: req?.query?.status
+        }).populate("members");
         return res.status(httpStatus.OK).send(assignments);
     }
 }
