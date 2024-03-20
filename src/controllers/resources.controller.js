@@ -31,8 +31,8 @@ const creacteResources = {
         }
         // send notification
        const payload = {
-            title : "Add resources",
-            description : "New Resources Added Please Check Your Resources and download your pdf and check the pdf.",
+            title : "Resources Created 📝",
+            description : "A new Resources has been created and download your pdf and check the pdf and Please review it.",
             createdBy : req.user._id
         } 
         await new Notification(payload).save();
