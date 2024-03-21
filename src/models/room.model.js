@@ -12,6 +12,10 @@ const roomSchema = mongoose.Schema(
             ref:'Admin',
             required:true,
         },
+        block: {
+            type: Boolean,
+            default: false 
+        }
     },
     {
         timestamps: true,
