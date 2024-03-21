@@ -66,16 +66,31 @@ const getChat = {
                 message: 'RoomId is Required',
             });
         }
-        const chat = await Chat.find({ roomId: req.query.roomId }).populate(['receiverId','senderId']);
+        const chat = await Chat.find({ roomId: req.query.roomId }).populate(['receiverId', 'senderId']);
 
-        console.log(chat,'chat')
+        console.log(chat, 'chat')
         return res.status(httpStatus.OK).send(chat);
     }
 }
 
+const deleteChat = {
+    handler: async (req, res) => {
+        const chat = await Chat.findById(req.params.id);
+        if (!chat) {
+            return res.status(httpStatus.NOT_FOUND).send({
+                message: 'Chat not found',
+            });
+        }
+        // console.log("hhjj", req.params.id);
+        await Chat.findByIdAndDelete(req.params.id);
+        return res.status(httpStatus.OK).send({
+            message: 'Chat deleted successfully',
+        });
+    }
+}
 
 module.exports = {
     createChat,
     getChat,
-
+    deleteChat
 }

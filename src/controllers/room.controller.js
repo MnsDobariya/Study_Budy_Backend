@@ -13,16 +13,18 @@ const createRoom = {
     },
     handler: async (req, res) => {
         console.log('req.user', req.body);
-        const userData = await Room.findOne({  $or: [
-            {
-                senderId:  req.user._id,
-                receiverId: req.body.receiverId
-            },
-            {
-                receiverId:  req.user._id,
-                senderId: req.body.receiverId
-            }
-        ] })
+        const userData = await Room.findOne({
+            $or: [
+                {
+                    senderId: req.user._id,
+                    receiverId: req.body.receiverId
+                },
+                {
+                    receiverId: req.user._id,
+                    senderId: req.body.receiverId
+                }
+            ]
+        })
 
         if (userData) {
             return res.status(httpStatus.BAD_REQUEST).send({
@@ -47,10 +49,10 @@ const getRoom = {
                 '$match': {
                     $or: [
                         {
-                            senderId:  req.user._id,
+                            senderId: req.user._id,
                         },
                         {
-                            receiverId:  req.user._id,
+                            receiverId: req.user._id,
                         }
                     ]
 
@@ -119,8 +121,67 @@ const getRoom = {
     }
 };
 
+const updateBlockRoom = {
+    handler: async (req, res, next) => {
+        try {
+            // const roomId = req.params.roomId; 
+            const room = await Room.findById({ _id: req.params.id }, req.body, { new: true });
+            // console.log('room', room)
+
+
+            if (!room) {
+                throw new ApiError(httpStatus.NOT_FOUND, 'Room not found');
+            }
+
+            room.blocked = true;
+            await room.save();
+
+            return res.status(httpStatus.OK).send({ message: 'Room blocked successfully' });
+        } catch (error) {
+            return next(error);
+        }
+    }
+};
+
+const updateUnblockRoom = {
+    handler: async (req, res, next) => {
+        try {
+            // const roomId = req.params.roomId; 
+            const room = await Room.findById({ _id: req.params.id });
+            if (!room) {
+                throw new ApiError(httpStatus.NOT_FOUND, 'Room not found');
+            }
+
+            room.blocked = false;
+            await room.save();
+
+            return res.status(httpStatus.OK).send({ message: 'Room unblocked successfully' });
+        } catch (error) {
+            return next(error);
+        }
+    }
+};
+
+const deleteRoom = {
+    handler:async (req,res)=>{
+        const room = await Room.findById(req.params.id);
+        if (!room) {
+            return res.status(httpStatus.NOT_FOUND).send({
+                message: 'Room not found',
+            });
+        }
+        // console.log("hhjj", req.params.id);
+        await Room.findByIdAndDelete(req.params.id);
+        return res.status(httpStatus.OK).send({
+            message: 'Room deleted successfully',
+        });
+    }
+}
 
 module.exports = {
     createRoom,
-    getRoom
+    getRoom,
+    updateUnblockRoom,
+    updateBlockRoom,
+    deleteRoom
 }
