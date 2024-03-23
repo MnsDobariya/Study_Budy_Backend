@@ -122,11 +122,16 @@ const getRoom = {
 };
 
 const updateBlockRoom = {
+    validation: {
+        body: Joi.object().keys({
+            block: Joi.boolean()
+        }),
+    },
     handler: async (req, res, next) => {
         try {
             // const roomId = req.params.roomId; 
-            const room = await Room.findById({ _id: req.params.id }, req.body, { new: true });
-            // console.log('room', room)
+            const room = await Room.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
+            // console.log('room', room);
 
 
             if (!room) {
@@ -135,11 +140,27 @@ const updateBlockRoom = {
 
             room.blocked = true;
             await room.save();
-
             return res.status(httpStatus.OK).send({ message: 'Room blocked successfully' });
         } catch (error) {
             return next(error);
         }
+    }
+};
+
+const getBlockRoom = {
+    handler: async (req, res, next) => {
+        // try {
+        const room = await Room.find({ block: true }).populate("receiverId");
+        // console.log(room,"blockRoom");
+
+        // if (!room) {
+        //     throw new ApiError(httpStatus.NOT_FOUND, 'Room not found');
+        // }
+
+        return res.status(httpStatus.OK).send(room);
+        // } catch (error) {
+        //     return next(error);
+        // }
     }
 };
 
@@ -163,7 +184,7 @@ const updateUnblockRoom = {
 };
 
 const deleteRoom = {
-    handler:async (req,res)=>{
+    handler: async (req, res) => {
         const room = await Room.findById(req.params.id);
         if (!room) {
             return res.status(httpStatus.NOT_FOUND).send({
@@ -182,6 +203,7 @@ module.exports = {
     createRoom,
     getRoom,
     updateUnblockRoom,
+    getBlockRoom,
     updateBlockRoom,
     deleteRoom
 }

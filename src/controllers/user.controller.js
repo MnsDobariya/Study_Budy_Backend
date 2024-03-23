@@ -249,12 +249,12 @@ const getSearchName = {
       });
     }
 
-    if (req?.query?.role === "Admin") {
-      const users = await Admin.find()
+    if (req?.user?.role === "Admin") {
+      const users = await Admin.find({ firstName: req?.query?.firstName })
       return res.status(httpStatus.OK).send(users);
     }
 
-    const user = await Admin.find({ firstName: req?.query?.firstName , year : req.user?.year }).populate('receiverId').lean();
+    const user = await Admin.find({ firstName: req?.query?.firstName, year: req.user?.year }).populate('receiverId').lean();
 
     const room = await Room.find({
       $or: [

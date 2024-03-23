@@ -9,8 +9,8 @@ const  router = express.Router();
 router.post('/create',auth(),validate(roomController.createRoom.validation),catchAsync(roomController.createRoom.handler));
 router.delete('/delete/:id',catchAsync(roomController.deleteRoom.handler));
 router.get('/get',auth(),catchAsync(roomController.getRoom.handler));
-router.put('/update/:id/block', auth(), catchAsync(roomController.updateBlockRoom.handler));
-router.put('/update/:id/unblock', auth(), catchAsync(roomController.updateUnblockRoom.handler));
-
+router.put('/block/update/:id', auth(), catchAsync(roomController.updateBlockRoom.handler));
+router.get('/block/get', auth(), catchAsync(roomController.getBlockRoom.handler));
+router.put('/unblock/update/:id', auth(), catchAsync(roomController.updateUnblockRoom.handler));
 module.exports = router;    
 
