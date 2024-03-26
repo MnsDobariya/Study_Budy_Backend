@@ -109,6 +109,7 @@ const getRoom = {
                     'sender': 1,
                     'receiver': 1,
                     'createdAt': 1,
+                    'block': 1,
                     'messager': {
                         '$arrayElemAt': [
                             '$receiver_messager', 0
@@ -150,7 +151,7 @@ const updateBlockRoom = {
 const getBlockRoom = {
     handler: async (req, res, next) => {
         // try {
-        const room = await Room.find({ block: true }).populate("receiverId");
+        const room = await Room.find({ block: true, senderId: req?.user?.id }).populate("receiverId");
         // console.log(room,"blockRoom");
 
         // if (!room) {
@@ -165,10 +166,15 @@ const getBlockRoom = {
 };
 
 const updateUnblockRoom = {
+    validation: {
+        body: Joi.object().keys({
+            block: Joi.boolean()
+        }),
+    },
     handler: async (req, res, next) => {
         try {
             // const roomId = req.params.roomId; 
-            const room = await Room.findById({ _id: req.params.id });
+            const room = await Room.findByIdAndUpdate({ _id: req.params.id }, req.body, { new: true });
             if (!room) {
                 throw new ApiError(httpStatus.NOT_FOUND, 'Room not found');
             }
